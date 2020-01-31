@@ -1,0 +1,64 @@
+- name: Install gnupgp (not installed on Debian by default)
+  apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+
+- name: Add NodeSource package signing key
+  apt_key:
+    url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+    state: present
+
+- name: Add desired NodeSource repository
+  apt_repository:
+    repo: deb https://deb.nodesource.com/{{ NODE_VERSION }} {{ ansible_distribution_release }} main
+    state: present
+
+- name: Add desired NodeSource source repository
+  apt_repository:
+    repo: deb-src https://deb.nodesource.com/{{ NODE_VERSION }} {{ ansible_distribution_release }} main
+    state: present
+
+- name: Upgrade package list
+  apt:
+    update_cache: yes
+    upgrade: full
+
+- name: Install packages
+  apt:
+    name:
+      - bison
+      - cmake
+      - gcc
+      - gcc-mingw-w64
+      - heimdal-dev
+      - libgcrypt20-dev
+      - libglib2.0-dev
+      - libgnutls28-dev
+      - libgpgme-dev
+      - libhiredis-dev
+      - libksba-dev
+      - libmicrohttpd-dev
+      - git
+      - libpcap-dev
+      - libpopt-dev
+      - libsnmp-dev
+      - libsqlite3-dev
+      - libssh-gcrypt-dev
+      - xmltoman
+      - libxml2-dev
+      - perl-base
+      - pkg-config
+      - python3-paramiko
+      - python3-setuptools
+      - uuid-dev
+      - curl
+      - redis
+      - doxygen
+      - libical-dev
+      - python-polib   #python3-polib
+      - gnutls-bin
+      - nmap
+      - nodejs
+    state: latest
+

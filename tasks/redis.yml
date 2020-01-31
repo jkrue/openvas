@@ -1,0 +1,47 @@
+# Configure and optimize redis server
+
+- name: Increase the value of somaxconn in order to avoid slow clients connections issues
+  sysctl:
+    name: net.core.somaxconn
+    value: "1024"
+    state: present
+
+- name: Increase the value of somaxconn in order to avoid slow clients connections issues
+  sysctl:
+    name: vm.overcommit_memory
+    value: "1"
+    state: present
+
+- name: Disable Linux Kernel support for Transport Huge Pages (THP)
+  copy:
+    src: disable_thp.service
+    dest: /etc/systemd/system/disable_thp.service
+    owner: root
+    group: root
+    mode: 0644
+  register: service
+
+- name: Enable + Start service
+  systemd:
+    name: disable_thp
+    daemon_reload: yes
+    enabled: yes
+    state: started
+  when: service is changed
+
+- name: Configure redis
+  copy:
+    src: redis_4_0.conf
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+    mode: 0640
+  register: redis
+
+
+- name: Restart redis (in case of config change)
+  systemd:
+    name: redis
+    state: restarted
+  when: redis is changed
+
