@@ -1,0 +1,38 @@
+- name: Download Caddy server software
+  get_url:
+    url: https://github.com/caddyserver/caddy/releases/download/{{ caddy_version }}/caddy_{{ caddy_version }}_linux_amd64.tar.gz
+    dest: /tmp/
+    checksum: sha256:{{ caddy_sha256 }}
+
+- name: Extract Caddy server binary
+  command: tar --directory=/usr/local/bin/ --extract --file=/tmp/caddy_{{ caddy_version }}_linux_amd64.tar.gz caddy
+
+- name: Copy Caddy service file
+  copy:
+    src: caddy.service
+    dest: /etc/systemd/system/
+    mode: 0444
+    owner: root
+    group: root
+
+- name: Create Caddy config dir
+  file:
+    path: /etc/caddy/
+    state: directory
+    owner: root
+    group: root
+
+- name: Write Caddy config file
+  template:
+    src: Caddyfile.j2
+    dest: /etc/caddy/Caddyfile
+    mode: 0440
+    owner: root
+    group: root
+
+- name: Enable and start Caddy service
+  systemd:
+    name: caddy
+    daemon_reload: yes
+    enabled: yes
+    state: started

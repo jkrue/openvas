@@ -4,6 +4,9 @@
 
 - include: redis.yml
 
+- include: caddy.yml
+  tags:
+    - caddy
 
 #- name: create redis configuration
 #  copy:
