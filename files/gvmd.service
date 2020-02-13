@@ -1,0 +1,15 @@
+[Unit]
+Description= Manager of the Open Vulnerability Assessment System
+Documentation=https://github.com/greenbone/gsa
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+
+
+[Service]
+Type=forking
+Restart=on-abnormal
+ExecStart=/usr/local/sbin/gvmd
+
+[Install]
+WantedBy=multi-user.target

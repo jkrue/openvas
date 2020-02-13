@@ -1,0 +1,8 @@
+- name: Get list of users
+  shell: /usr/local/sbin/gvmd --get-users
+  register: user_list
+
+
+- name: Create admin user (in case of empty userlist)
+  shell: /usr/local/sbin/gvmd --create-user {{ openvas_admin }} --password {{ openvas_password }}
+  when: user_list.stdout == ''

@@ -1,0 +1,58 @@
+- name: Updates the OpenVAS NVTs from Greenbone Security Feed/Community Feed
+  shell: greenbone-nvt-sync
+  args:
+    executable: bash
+
+- name: Copy OpenVAS scannner Daemon service file
+  copy:
+    src: openvassd.service
+    dest: /etc/systemd/system/
+    mode: 0444
+    owner: root
+    group: root
+
+- name: Copy OpenVAS scanner configuration
+  copy:
+    src: openvassd.conf
+    dest: /usr/local/etc/openvas/openvassd.conf
+    owner: root
+    group: root
+
+- name: Enable and start OpenVAS scanner service
+  systemd:
+    name: openvassd
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+
+- name: Copy OpenVAS manager service file
+  copy:
+    src: gvmd.service
+    dest: /etc/systemd/system/
+    mode: 0444
+    owner: root
+    group: root
+
+- name: Enable and start OpenVAS manager service
+  systemd:
+    name: gvmd
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Create Greenbone Security Assistant Daemon service file
+  copy:
+    template: gsad.service.j2
+    dest: /etc/systemd/system/gsad.service
+    mode: 0444
+    owner: root
+    group: root
+
+- name: Enable and start Greenbone Security Assistant Daemon service
+  systemd:
+    name: gsad
+    daemon_reload: yes
+    enabled: yes
+    state: started
+

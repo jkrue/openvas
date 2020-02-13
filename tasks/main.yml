@@ -1,53 +1,23 @@
-- include: apt.yml
+- include: openvas_dependencies.yml
+  tags:
+    - dependencies
 
-- include: build.yml
+- include: openvas_build.yml
+  tags:
+    - build
 
 - include: redis.yml
+  tags:
+    - redis
+
+- include: openvas_setup.yml
+  tags:
+    - setup
+
+- include: openvas_user_management.yml
+  tags:
+    - user_management
 
 - include: caddy.yml
   tags:
     - caddy
-
-#- name: create redis configuration
-#  copy:
-#    -
-
-
-#
-#- name: Create IDE build dir
-#  file:
-#    path: "{{ theia_ide_install_dir }}"
-#    state: directory
-#
-#- name: Copy IDE configuration to IDE build dir
-#  copy:
-#    src: package.json
-#    dest: "{{ theia_ide_install_dir }}/package.json"
-#    mode: 0644
-#
-#- name: build ide
-#  shell: |
-#        source {{ nvm_install_dir }}/nvm.sh
-#        yarn
-#        yarn theia build
-#  args:
-#    chdir: "{{ theia_ide_install_dir }}"
-#    executable: bash
-#
-#- name: Generate IDE start skript to /usr/local/bin
-#  template:
-#    src: theia-ide.sh.j2
-#    dest: "{{ theia_ide_install_dir }}/theia-ide.sh"
-#    mode: 0755
-#
-#- name: Generate systemd service
-#  template:
-#    src: theia-ide.service.j2
-#    dest: /etc/systemd/system/theia-ide.service
-#    mode: 0644
-#
-#- name: Enable and Start service
-#  systemd:
-#    name: theia-ide.service
-#    enabled: true
-#    state: started

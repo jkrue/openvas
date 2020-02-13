@@ -1,0 +1,13 @@
+[Unit]
+Description=Greenbone Security Assistant Daemon
+Documentation=https://github.com/greenbone/gsa
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Type=forking
+Restart=on-abnormal
+ExecStart=/usr/local/sbin/gsad --http-only --listen={{ openvas_local_ip }} --port={{ openvas_local_port }}
+
+[Install]
+WantedBy=multi-user.target

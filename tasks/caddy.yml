@@ -6,6 +6,8 @@
 
 - name: Extract Caddy server binary
   command: tar --directory=/usr/local/bin/ --extract --file=/tmp/caddy_{{ caddy_version }}_linux_amd64.tar.gz caddy
+  args:
+    warn: false
 
 - name: Copy Caddy service file
   copy:
