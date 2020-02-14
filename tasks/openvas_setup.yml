@@ -42,8 +42,8 @@
     state: started
 
 - name: Create Greenbone Security Assistant Daemon service file
-  copy:
-    template: gsad.service.j2
+  template:
+    src: gsad.service.j2
     dest: /etc/systemd/system/gsad.service
     mode: 0444
     owner: root

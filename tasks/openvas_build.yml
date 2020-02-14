@@ -20,6 +20,7 @@
   args:
     executable: bash
     creates: /usr/local/lib/libgvm_base.so
+  register: build_gvmlibs
 
 - name: build and install OpenVAS SMB
   shell: |
@@ -36,6 +37,7 @@
   args:
     executable: bash
     creates: /usr/local/bin/winexe
+  register: build_smb
 
 - name: build and install OpenVAS Scanner
   shell: |
@@ -52,6 +54,7 @@
   args:
     executable: bash
     creates: /usr/local/bin/openvas-nasl
+  register: build_openvas
 
 - name: build and install OSPd
   shell: |
@@ -64,6 +67,7 @@
   args:
     executable: bash
     creates: /usr/local/lib/ospd.installed
+
 
 - name: build and install GVM
   shell: |
@@ -80,6 +84,7 @@
   args:
     executable: bash
     creates: /usr/local/bin/gvm-manage-certs
+  register: build_gvm
 
 - name: build and install GSA
   shell: |
@@ -96,3 +101,10 @@
   args:
     executable: bash
     creates: /usr/local/sbin/gsad
+  register: build_gsa
+
+- name: ldconfig
+  shell: ldconfig
+  args:
+      executable: bash
+  when: build_gvmlibs is changed and build_smb and build_openvas and build_gvm is changed and build_gsa is changed
