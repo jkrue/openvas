@@ -1,23 +1,35 @@
-- include: openvas_dependencies.yml
+- include: 10-openvas_dependencies.yml
   tags:
     - dependencies
 
-- include: openvas_build.yml
+- include: 15-openvas_prep.yml
   tags:
-    - build
+    - prep
 
-- include: redis.yml
+- include: 20-openvas_build_1.yml
+  tags:
+    - build_1
+
+- include: 30-redis.yml
   tags:
     - redis
 
-- include: openvas_setup.yml
+- include: 32-openvas_setup_1.yml
   tags:
-    - setup
+    - setup_1
 
-- include: openvas_user_management.yml
+- include: 35-openvas_build_2.yml
+  tags:
+    - build_2
+
+- include: 40-openvas_setup_2.yml
+  tags:
+    - setup_2
+
+- include: 50-openvas_user_management.yml
   tags:
     - user_management
 
-- include: caddy.yml
+- include: 60-caddy.yml
   tags:
     - caddy

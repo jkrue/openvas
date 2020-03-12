@@ -1,5 +1,3 @@
-NODE_VERSION: node_10.x
-
 caddy_version: v1.0.4
 caddy_sha256: 9e7f37466cbfad53188f038b84ed4469645d3d0fc91f9206f7a54b36eee4b432
 caddy_domain_name: my-domain.com

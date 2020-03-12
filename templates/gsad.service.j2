@@ -1,13 +1,19 @@
 [Unit]
-Description=Greenbone Security Assistant Daemon
-Documentation=https://github.com/greenbone/gsa
-After=network-online.target
-Wants=network-online.target systemd-networkd-wait-online.service
+Description=Job that runs the gsa daemon
+Documentation=man:gsa
+After=postgresql.service
 
 [Service]
 Type=forking
-Restart=on-abnormal
-ExecStart=/usr/local/sbin/gsad --http-only --listen={{ openvas_local_ip }} --port={{ openvas_local_port }}
+PIDFile=/opt/gvm/var/run/gsad.pid
+WorkingDirectory=/opt/gvm
+ExecStart=/opt/gvm/sbin/gsad --drop-privileges=gvm --http-only --listen={{ openvas_local_ip }} --port={{ openvas_local_port }}
+Restart=on-failure
+RestartSec=2min
+KillMode=process
+KillSignal=SIGINT
+GuessMainPID=no
+PrivateTmp=true
 
 [Install]
 WantedBy=multi-user.target

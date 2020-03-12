@@ -1,0 +1,12 @@
+- name: Get list of users
+  shell: /opt/gvm/sbin/gvmd --get-users
+  register: user_list
+  become: yes
+  become_user: gvm
+
+
+- name: Create admin user (in case of empty userlist)
+  shell: /opt/gvm/sbin/gvmd --create-user="{{ openvas_admin }}" --password="{{ openvas_password }}"
+  when: user_list.stdout == ''
+  become: yes
+  become_user: gvm

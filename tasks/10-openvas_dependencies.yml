@@ -1,0 +1,94 @@
+- name: Wait for automatic system updates
+  shell: while sudo fuser /var/lib/dpkg/lock-frontend >/dev/null 2>&1; do sleep 1; done;
+  changed_when: false
+
+- name: Install gnupgp (not installed on Debian by default)
+  apt:
+    name: gnupg
+    state: present
+    update_cache: yes
+
+- name: Add YarnPkg package signing key
+  apt_key:
+    url: https://dl.yarnpkg.com/debian/pubkey.gpg
+    state: present
+
+- name: Add YarnPkg repository
+  apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
+
+- name: Update package list and upgrade system
+  apt:
+    update_cache: yes
+    upgrade: full
+
+- name: Install packages
+  apt:
+    name:
+      - bison
+      - cmake
+      - curl
+      - doxygen
+      - fakeroot
+      - gcc-mingw-w64
+      - gettext
+      - git
+      - gnupg
+      - gnutls-bin
+      - graphviz
+      - heimdal-dev
+      - libglib2.0-dev
+      - libgnutls28-dev
+      - libgpgme-dev
+      - libhiredis-dev
+      - libical-dev
+      - libksba-dev
+      - libldap2-dev
+      - libmicrohttpd-dev
+      - libpcap-dev
+      - libpopt-dev
+      - libradcli-dev
+      - libsnmp-dev
+      - libssh-gcrypt-dev
+      - libxml2-dev
+      - nmap
+      - nsis
+      - pkg-config
+      - postgresql
+      - postgresql-contrib
+      - postgresql-server-dev-all
+      - python3-defusedxml
+      - python3-lxml
+      - python3-paramiko
+      - python3-pip
+      - python3-psutil
+      - python-polib
+      - redis-server
+      - rpm
+      - rsync
+      - smbclient
+      - snmp
+      - socat
+      - software-properties-common
+      - sshpass
+      - uuid-dev
+      - vim
+      - virtualenv
+      - wget
+      - xmltoman
+      - xml-twig-tools
+      - xsltproc
+      - yarn
+    state: latest
+
+- name: Install packages
+  apt:
+    name: texlive-latex-extra
+    install_recommends: no
+    state: latest
+
+- name: Install packages
+  apt:
+    name: texlive-fonts-recommended
+    state: latest

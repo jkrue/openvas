@@ -1,0 +1,47 @@
+- name: Copy gvmd service file
+  copy:
+    src: gvmd.service
+    dest: /etc/systemd/system/
+    mode: 0444
+
+- name: Enable and start gvmd service
+  systemd:
+    name: gvmd
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Copy gsad service file
+  template:
+    src: gsad.service.j2
+    dest: /etc/systemd/system/gsad.service
+    mode: 0444
+
+- name: Enable and start gsad service
+  systemd:
+    name: gsad
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Copy ospd-openvas service file
+  copy:
+    src: ospd-openvas.service
+    dest: /etc/systemd/system/
+    mode: 0444
+
+- name: Enable and start ospd-openvas service
+  systemd:
+    name: ospd-openvas
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: Update and verify scanner
+  shell: |
+    SCANNER="$(gvmd --get-scanners | grep "OpenVAS Default" | cut -d" " -f 1)"
+    gvmd --modify-scanner="${SCANNER}" --scanner-host=/opt/gvm/var/run/ospd.sock
+    sleep 10
+    gvmd --verify-scanner="${SCANNER}"
+  become: yes
+  become_user: gvm

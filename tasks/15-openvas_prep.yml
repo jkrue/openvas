@@ -1,0 +1,50 @@
+- name: add path to gvm profile
+  lineinfile:
+    path: /etc/profile.d/gvm.sh
+    line: 'export PATH="$PATH:/opt/gvm/bin:/opt/gvm/sbin:/opt/gvm/.local/bin"'
+    create: yes
+    mode: '0755'
+
+- name: add gvm libs location to ld
+  lineinfile:
+    path: /etc/ld.so.conf.d/gvm.conf
+    line: '/opt/gvm/lib'
+    create: yes
+
+- name: Create gvm user
+  user:
+    name: gvm
+    home: /opt/gvm/
+    password_lock: yes
+    groups:
+      - redis
+
+- name: Create gvm dir
+  file:
+    path: /opt/gvm/
+    state: directory
+    owner: gvm
+    group: gvm
+
+- name: Create gvm src dir
+  file:
+    path: /opt/gvm/src/
+    state: directory
+    owner: gvm
+    group: gvm
+
+- name: Clone repos
+  shell: |
+    git clone -b gvm-libs-11.0 --single-branch  https://github.com/greenbone/gvm-libs.git && \
+    git clone -b openvas-7.0 --single-branch https://github.com/greenbone/openvas.git && \
+    git clone -b gvmd-9.0 --single-branch https://github.com/greenbone/gvmd.git && \
+    git clone -b master --single-branch https://github.com/greenbone/openvas-smb.git && \
+    git clone -b gsa-9.0 --single-branch https://github.com/greenbone/gsa.git && \
+    git clone -b ospd-openvas-1.0 --single-branch  https://github.com/greenbone/ospd-openvas.git && \
+    git clone -b ospd-2.0 --single-branch https://github.com/greenbone/ospd.git
+  args:
+    chdir: /opt/gvm/src/
+  become: yes
+  become_user: gvm
+
+
