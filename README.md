@@ -1,11 +1,12 @@
 # OpenVAS 
-Install and configure  [OpenVAS 10](https://github.com/greenbone/openvas) on supported cloud images.
-The role uses [Caddy](https://caddyserver.com/) as reverse proxy with automatic HTTPS for OpenVaS.
+Install and configure  [Greenbone Security Manager (Community Edition)](https://www.greenbone.net/en/community-edition/) on supported cloud images.
+The role uses [Caddy](https://caddyserver.com/) as reverse proxy with automatic HTTPS.
 
 
 Supported cloud image is [Debian Buster (10)](https://cdimage.debian.org/cdimage/openstack/current/).
 Other distros based on Debian might also work.
 
+This playbook is based on instructions available at https://sadsloth.net/post/install-gvm11-src-on-debian/.
 
 ## Configuration
 The role uses the following variables preset with some meaningful defaults.

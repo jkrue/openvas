@@ -1,0 +1,54 @@
+- name: build and install GVM libaries
+  shell: |
+    export PKG_CONFIG_PATH=/opt/gvm/lib/pkgconfig:$PKG_CONFIG_PATH
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/gvm ..
+    make -j2
+    make doc
+    make install
+  args:
+    executable: bash
+    chdir: /opt/gvm/src/gvm-libs/
+    creates: /opt/gvm/lib/libgvm_base.so
+  become: yes
+  become_user: gvm
+  register: build_gvmlibs
+
+- name: build and install OpenVAS SMB
+  shell: |
+    cd openvas-smb
+    export PKG_CONFIG_PATH=/opt/gvm/lib/pkgconfig:$PKG_CONFIG_PATH
+    mkdir build
+    cd build/
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/gvm ..
+    make -j2
+    make install
+  args:
+    executable: bash
+    chdir: /opt/gvm/src/openvas-smb/
+    creates: /opt/gvm/bin/winexe
+  become: yes
+  become_user: gvm
+  register: build_smb
+
+- name: build and install OpenVAS Scanner
+  shell: |
+    cd openvas
+    export PKG_CONFIG_PATH=/opt/gvm/lib/pkgconfig:$PKG_CONFIG_PATH
+    mkdir build
+    cd build/
+    cmake -DCMAKE_INSTALL_PREFIX=/opt/gvm ..
+    make -j2
+    make doc
+    make install
+  args:
+    executable: bash
+    chdir: /opt/gvm/src/openvas/
+    creates: /opt/gvm/bin/openvas-nasl
+  become: yes
+  become_user: gvm
+  register: build_openvas
+
+- name: ldconfig
+  command: ldconfig

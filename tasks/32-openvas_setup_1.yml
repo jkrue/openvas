@@ -1,0 +1,16 @@
+- name: Configure sudoers for openvas
+  copy:
+    src: openvas.sudoers
+    dest: /etc/sudoers.d/openvas
+
+- name: Updates the OpenVAS NVTs from Greenbone Security Feed/Community Feed
+  command: greenbone-nvt-sync
+  become: yes
+  become_user: gvm
+
+- name: upload plugins in redis with openvas
+  shell: openvas -u
+  args:
+    executable: bash
+  become: yes
+  become_user: gvm

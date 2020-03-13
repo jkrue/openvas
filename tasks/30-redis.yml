@@ -6,7 +6,7 @@
     value: "1024"
     state: present
 
-- name: Increase the value of somaxconn in order to avoid slow clients connections issues
+- name: Increase the value of overcommit memory
   sysctl:
     name: vm.overcommit_memory
     value: "1"
@@ -29,19 +29,35 @@
     state: started
   when: service is changed
 
-- name: Configure redis
+- name: Remove default redis conf
+  file:
+    path: /etc/redis/redis.conf
+    state: absent
+
+- name: Copy openvas redis config
   copy:
-    src: redis_4_0.conf
-    dest: /etc/redis/redis.conf
+    remote_src: yes
+    src: /opt/gvm/src/openvas/config/redis-openvas.conf
+    dest: /etc/redis/redis-openvas.conf
     owner: redis
     group: redis
     mode: 0640
-  register: redis
+  register: redis_conf
 
+- name: Configure redis socket
+  copy:
+    src: openvas.conf
+    dest: /opt/gvm/etc/openvas/openvas.conf
 
-- name: Restart redis (in case of config change)
+- name: Start and enable openvas redis
   systemd:
-    name: redis
+    name: redis-server@openvas
+    state: started
+    enabled: yes
+
+- name: Restart openvas redis (in case of config change)
+  systemd:
+    name: redis-server@openvas
     state: restarted
-  when: redis is changed
+  when: redis_conf is changed
 
