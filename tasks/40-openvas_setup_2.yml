@@ -41,7 +41,5 @@
   shell: |
     SCANNER="$(gvmd --get-scanners | grep "OpenVAS Default" | cut -d" " -f 1)"
     gvmd --modify-scanner="${SCANNER}" --scanner-host=/opt/gvm/var/run/ospd.sock
-    sleep 10
-    gvmd --verify-scanner="${SCANNER}"
   become: yes
   become_user: gvm
